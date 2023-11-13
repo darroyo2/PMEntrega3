@@ -4,7 +4,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,11 +27,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -133,10 +138,25 @@ fun RoutineScreen(viewModel: RoutineScreenViewModel, navController: NavHostContr
     //viewModel.fetchExercieses()
 
     Column {
-        Text("userId: ${viewModel.userId}")
-        Text("memberId: ${viewModel.memberId}")
-        Text("Ejercicios Asignados: ${viewModel.exercisesCount}")
-        Text("Partes del Cuerpo Entrenadas: ${viewModel.bodyPartsCount}")
+        //Text("userId: ${viewModel.userId}")
+        //Text("memberId: ${viewModel.memberId}")
+        //Text("Ejercicios Asignados: ${viewModel.exercisesCount}")
+        //Text("Partes del Cuerpo Entrenadas: ${viewModel.bodyPartsCount}")
+        Row(){
+            Column(modifier = Modifier
+                .height(85.dp)
+                .padding(start = 65.dp, top = 15.dp, end = 0.dp)){
+                Text("${viewModel.exercisesCount}", fontSize = 30.sp , fontWeight = FontWeight.Bold, modifier = Modifier.align(
+                    Alignment.CenterHorizontally ))
+                Text("Ejercicios Asignados", fontSize = 12.sp , modifier = Modifier.align(Alignment.CenterHorizontally ))
+            }
+            Column(modifier = Modifier
+                .height(85.dp)
+                .padding(start = 25.dp, top = 15.dp, end = 10.dp)){
+                Text("${viewModel.bodyPartsCount}" ,fontSize = 30.sp ,fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterHorizontally ))
+                Text("Partes del Cuerpo Entrenadas", fontSize = 12.sp , modifier = Modifier.align(Alignment.CenterHorizontally ))
+            }
+        }
         SelectOpitionsRoutine(viewModel)
         RoutineGrid(navController, viewModel)
     }

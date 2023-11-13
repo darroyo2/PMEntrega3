@@ -106,8 +106,6 @@ fun ProfileScreen2(navController: NavController){
                     temp = it
                 }
             )
-
-
         }
     }
     Row(

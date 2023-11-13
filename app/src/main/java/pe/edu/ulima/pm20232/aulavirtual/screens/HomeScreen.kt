@@ -37,7 +37,6 @@ import pe.edu.ulima.pm20232.aulavirtual.ui.theme.Gray1200
 @Composable
 fun ExercisesGrid(navController: NavController, model: HomeScreenViewModel){
     var intValue by remember { mutableStateOf(0) }
-    //val pokemons by model.pokemons.collectAsState()
     val exercises by model.exercises.collectAsState()
     LazyVerticalGrid(
         cells = GridCells.Fixed(4) // Specify the number of columns
@@ -128,6 +127,7 @@ fun HomeScreen(navController: NavController, model: HomeScreenViewModel){
             .fillMaxWidth()
             .padding(20.dp)
     ){
+
         SelectOpitions(model)
         ExercisesGrid(navController, model)
     }
