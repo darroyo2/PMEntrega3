@@ -3,6 +3,8 @@ package pe.edu.ulima.pm20232.aulavirtual.screenmodels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
@@ -14,6 +16,7 @@ import kotlinx.coroutines.withContext
 import pe.edu.ulima.pm20232.aulavirtual.configs.BackendClient
 import pe.edu.ulima.pm20232.aulavirtual.models.BodyPart
 import pe.edu.ulima.pm20232.aulavirtual.models.Exercise
+import pe.edu.ulima.pm20232.aulavirtual.models.Integrante
 import pe.edu.ulima.pm20232.aulavirtual.models.responses.BodyPartExercisesCount
 import pe.edu.ulima.pm20232.aulavirtual.models.responses.ExerciseSetReps
 import pe.edu.ulima.pm20232.aulavirtual.services.*
@@ -21,6 +24,7 @@ import retrofit2.Response
 
 class RoutineScreenViewModel(): ViewModel(){
     private val memberService = BackendClient.buildService(MemberService::class.java)
+    private val homeService = BackendClient.buildService(HomeService::class.java)
     private val coroutine: CoroutineScope = viewModelScope
 
     var userId: Int by mutableStateOf(0)
@@ -31,6 +35,8 @@ class RoutineScreenViewModel(): ViewModel(){
     val bodyPartFlow = MutableStateFlow(bodyPartMap.toMap())
     private var _exercises = MutableStateFlow<List<Exercise>>(emptyList())
     val exercises: StateFlow<List<Exercise>> get() = _exercises
+    private val _integrantes = MutableLiveData<List<Integrante>>()
+    val integrantes: LiveData<List<Integrante>> get() = _integrantes
     fun setExercises(newItems: List<Exercise>) {
         _exercises.value = newItems
     }
@@ -55,6 +61,29 @@ class RoutineScreenViewModel(): ViewModel(){
             }
         }
     }
+
+    fun fetchAbout() {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val response: Response<List<Integrante>> = homeService.about().execute()
+                    if (response.isSuccessful) {
+                        val list: List<Integrante> = response.body() ?: emptyList()
+                        _integrantes.postValue(list)
+                    } else {
+                        // Maneja errores
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
+
+
+
 
     fun fetchBodyParts(){
         coroutine.launch {
@@ -122,4 +151,8 @@ class RoutineScreenViewModel(): ViewModel(){
             }
         }
     }
+}
+
+private operator fun <T> StateFlow<T>.set(codigo: Int, value: String) {
+
 }

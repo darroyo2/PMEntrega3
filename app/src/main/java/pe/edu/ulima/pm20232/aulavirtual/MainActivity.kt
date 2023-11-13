@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
                                         title = "Cerrar Sesión",
                                     ),
                                 )
-                                TopNavigationBar(navController, screens)
+                                TopNavigationBar(navController, screens, routineScreenViewModel)
                             }
                         },
                         bottomBar = {
@@ -223,6 +223,7 @@ class MainActivity : ComponentActivity() {
                                     routineScreenViewModel.fetchBodyPartsExercises()
                                     routineScreenViewModel.fetchBodyParts()
                                     routineScreenViewModel.fetchExercieses()
+                                    routineScreenViewModel.fetchAbout()
                                     RoutineScreen(routineScreenViewModel, navController)
                                 })
                                 composable(route = "pokemon/edit?pokemon_id={pokemon_id}", arguments = listOf(

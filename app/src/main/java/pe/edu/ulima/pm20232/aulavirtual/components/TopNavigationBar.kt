@@ -22,24 +22,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import pe.edu.ulima.pm20232.aulavirtual.configs.TopBarScreen
+import pe.edu.ulima.pm20232.aulavirtual.models.Integrante
+import pe.edu.ulima.pm20232.aulavirtual.screenmodels.RoutineScreenViewModel
+
 
 @Composable
-fun TopNavigationBar(navController: NavController, screens: List<TopBarScreen>) {
-
+fun TopNavigationBar(navController: NavController, screens: List<TopBarScreen>, routineViewModel: RoutineScreenViewModel) {
     var isMenuExpanded by remember { mutableStateOf(false) }
-    var isClicked by remember { mutableStateOf(false)}
-    TopAppBar(
+    var isDialogVisible by remember { mutableStateOf(false) }
 
+    TopAppBar(
         title = { Text(text = "ULima GYM") },
-        /*navigationIcon = {
-            IconButton(
-                onClick = {
-                    // Handle navigation icon click (e.g., open drawer or navigate back)
-                }
-            ) {
-                Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-            }
-        },*/
         actions = {
             IconButton(
                 onClick = {
@@ -53,7 +46,9 @@ fun TopNavigationBar(navController: NavController, screens: List<TopBarScreen>) 
             }
             DropdownMenu(
                 expanded = isMenuExpanded,
-                onDismissRequest = { isMenuExpanded = false },
+                onDismissRequest = {
+                    isMenuExpanded = false
+                },
                 modifier = Modifier.padding(end = 16.dp)
             ) {
                 screens.forEachIndexed { index, item ->
@@ -62,13 +57,10 @@ fun TopNavigationBar(navController: NavController, screens: List<TopBarScreen>) 
                             onClick = {
                                 // Handle menu item click
                                 isMenuExpanded = false
-                                isClicked = true
+                                isDialogVisible = true
                             }
                         ) {
                             Text(text = item.title)
-                        }
-                        if (isClicked) {
-                            ShowMembers { isClicked = false}
                         }
                     } else {
                         DropdownMenuItem(
@@ -85,11 +77,25 @@ fun TopNavigationBar(navController: NavController, screens: List<TopBarScreen>) 
             }
         },
     )
+
+    // Mostrar el cuadro de diálogo cuando isDialogVisible es true
+    if (isDialogVisible) {
+        // Mostrar el cuadro de diálogo y pasar un callback para restablecer isDialogVisible
+        routineViewModel.integrantes.value?.let {
+            ShowMembers(integrantes = it) {
+                // Restablecer isDialogVisible a false cuando se cierra el cuadro de diálogo
+                isDialogVisible = false
+            }
+        }
+    }
 }
+
+
+
 @Composable
-fun ShowMembers(testDialog : @Composable () -> Unit)  {
+fun ShowMembers(integrantes: List<Integrante>, onDismiss: () -> Unit) {
     Dialog(
-        onDismissRequest = { /* No hacer nada al cerrar */ }
+        onDismissRequest = { onDismiss.invoke() }
     ) {
         Box(
             modifier = Modifier
@@ -101,22 +107,25 @@ fun ShowMembers(testDialog : @Composable () -> Unit)  {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .background(Color.White)
-                    .border(1.dp, Color.Black) // Agrega un borde negro
+                    .border(1.dp, Color.Black)
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Integrantes del Grupo\n " +
-                            "20202370 - Diego Arroyo\n" +
-                            "20152154 - Brayan Oropeza\n"+
-                            "20018950 - Jesus Espinoza\n" +
-                            "20105566 - Adrian Alcala\n" +
-                            "20261514 - Axel Coder\n",
+                    text = "Integrantes del Grupo",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = Color.Black,
                 )
 
+                integrantes.forEach { integrante ->
+                    Text(
+                        text = "${integrante.codigo} - ${integrante.nombre}",
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                        color = Color.Black,
+                    )
+                }
             }
         }
     }

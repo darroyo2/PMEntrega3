@@ -138,6 +138,7 @@ fun RoutineScreen(viewModel: RoutineScreenViewModel, navController: NavHostContr
     //viewModel.fetchExercieses()
 
     Column {
+
         //Text("userId: ${viewModel.userId}")
         //Text("memberId: ${viewModel.memberId}")
         //Text("Ejercicios Asignados: ${viewModel.exercisesCount}")

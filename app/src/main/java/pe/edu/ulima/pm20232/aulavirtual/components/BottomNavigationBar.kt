@@ -167,11 +167,11 @@ fun ShowShareDialog(testDialog: @Composable () -> Unit, context: Context) {
                     // Agregar un botón de cierre
                     Button(
                         onClick = {
-                            isDialogOpen = false
+                            isDialogOpen = true
                         },
                         modifier = Modifier.padding(8.dp)
                     ) {
-                        Text(text = "Cerrar")
+                        Text(text = "Abrir Diálogo")
                     }
                 }
             }
